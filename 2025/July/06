@@ -1,0 +1,73 @@
+---
+
+title: Django + React 基礎連携
+date: 2025-07-06
+tags: \[django, react, til, fullstack]
+--------------------------------------
+
+## 今日やったこと
+
+### Django バックエンド
+
+* `django-admin startproject myproject && python manage.py startapp api`
+* モデル `Scene`, `Phrase`, `Dialogue`, `Lesson` を定義
+
+  * `__str__` を実装して管理画面の可読性を向上
+* `ModelSerializer` + `ModelViewSet` + `router` で REST API を構築
+* `admin.site.register(...)` で Django 管理画面から CRUD
+* `python manage.py runserver` → `http://127.0.0.1:8000/api/scenes/` で JSON を確認
+
+### React フロントエンド
+
+```bash
+npx create-react-app frontend --template typescript
+cd frontend
+npm i axios
+```
+
+* `axios` で `/api/scenes/` を取得
+* `SceneList.tsx` コンポーネントで一覧表示
+* `proxy` を `package.json` に追加し CORS 回避 → Django 側は `django-cors-headers` で許可
+
+### トラブルシュート / 学び
+
+| Issue              | Fix                                                  |
+| ------------------ | ---------------------------------------------------- |
+| VSCode が仮想環境を認識しない | "Python: Select Interpreter" で `.venv` を選択           |
+| 404 (Not Found)    | ルーターの `path('api/', include(router.urls))` を確認       |
+| CORS               | `CORS_ALLOW_ALL_ORIGINS = True` (開発のみ) or オリジンを正しく設定 |
+
+---
+
+## 次回やること
+
+* 管理画面から `Scene` データを 2〜3 件登録
+* React で詳細表示ページ (`/scenes/:id`) を実装
+* UI ライブラリ検討
+
+  * ✅ MUI v6
+  * ⬜︎ Bootstrap 5
+* 必要に応じて:
+
+  * JWT or SessionAuth でユーザー認証
+  * WebSocket (Django Channels) でリアルタイム更新
+
+> **一言メモ**
+> ベースが動いたので次は「見た目」と「ユーザビリティ」に注力する。
+
+---
+
+### コマンドメモ
+
+```bash
+# Django
+python -m venv .venv && source .venv/bin/activate
+pip install django djangorestframework django-cors-headers
+
+# React
+npm start          # localhost:3000
+```
+
+---
+
+*Commit Hash*: TODO
